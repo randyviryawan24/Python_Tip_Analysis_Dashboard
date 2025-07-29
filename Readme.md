@@ -108,7 +108,6 @@ ax[1].tick_params(axis = 'x', labelsize = 11)
 ax[1].tick_params(axis = 'y', labelsize = 11)
 
 plt.tight_layout()
-plt.savefig(r"C:\Users\Randy V\Tips_Dashboard\docs\relationship_total_bill_and_tip.png", dpi=300, bbox_inches='tight')
 plt.show()
 ```
 
@@ -142,7 +141,6 @@ a.fig.suptitle('Average Tip over Total Bill across Days',
 
 a.set_axis_labels('Total_Bill','Tip')
 plt.tight_layout()
-plt.savefig(r"C:\Users\Randy V\Tips_Dashboard\docs\relationship_total_bill_and_tip_across_days.png", dpi=300, bbox_inches='tight')
 plt.show()
 
 ```
@@ -171,7 +169,6 @@ a.fig.suptitle('Total Bill vs Tip across Time and Size',
                y = 1.03)
 
 a.set_axis_labels('Total_Bill','Tip')
-plt.savefig(r"C:\Users\Randy V\Tips_Dashboard\docs\relationship_total_bill_and_tip_across_time_size.png",dpi=300,bbox_inches='tight')
 plt.tight_layout()
 plt.show()
 ```
@@ -181,3 +178,127 @@ plt.show()
 Insights:
 - The overall trend of the increase of total bill followed by tips is still applicable in both lunch and dinner time.
 - People not only tend to **tip more on dinner** but also **the size of more than 2 people in a table are higher** compared to lunch time.
+
+### 4.💡How many customers came in on each day of the week? Does gender play a role?
+
+Chart: Count Plot
+
+Code:
+```python
+hue_colors = {
+    'Male':'Black',
+    'Female':'Red'
+}
+hue_orders = ['Female','Male']
+a = sns.countplot(
+    data = tips,
+    x = 'day',
+    hue = 'sex',
+    palette=hue_colors,
+    hue_order=hue_orders
+)
+for i in a.patches:
+    width = i.get_x() + i.get_width()/2
+    height = i.get_height()
+    a.text(
+     width,
+     height,
+     f"{height:.0f}",
+     fontsize = 10,
+     ha = 'center',
+     va = 'bottom'   
+    )
+a.set_title('Number of Customers Across Days by Gender')
+a.set(xlabel = 'Day', ylabel='Count')
+plt.tight_layout()
+plt.show()
+```
+![Chart_4](docs/num_customers_across_days_gender.png)
+
+Insights:
+- The number of customers between Male and Female that come on **weekday(Thursday & Friday) is nearly even**. The huge difference comes on **weekend** where Male is **over two times higher** on Saturday and **over three times higher** on Sunday compared to Female.
+
+### 5. 💡 What’s the distribution of total bills and tip per day across gender?
+
+Chart: Boxplot
+
+Code:
+```python
+sns.set_theme(style='whitegrid')
+fig,ax = plt.subplots(1,2, figsize=(12,5))
+
+##Box Plot Total Bills Each Day across Gender
+hue_colors = {
+    'Male':'Green',
+    'Female':'Red'
+}
+sns.boxplot(
+    data = tips,
+    x = 'day',
+    y = 'total_bill',
+    hue = 'sex',
+    whis = [5,95],
+    order=['Thur','Fri','Sat','Sun'],
+    hue_order=['Female','Male'],
+    palette=hue_colors,
+    ax = ax[0]
+)
+ax[0].set_title('Box Plot Total Bill across Days by Gender')
+ax[0].set_xlabel('Day')
+ax[0].set_ylabel('Total Bill')
+
+#Box Plot Tip Each Day across Gender
+
+sns.boxplot(
+    data=tips,
+    x = 'day',
+    y = 'tip',
+    hue ='sex',
+    whis = [5,95],
+    order=['Thur','Fri','Sat','Sun'],
+    hue_order=['Female','Male'],
+    palette=hue_colors,
+    ax = ax[1]
+)
+ax[1].set_title('Box Plot Tip across Day by Gender')
+ax[1].set_xlabel('Day')
+ax[1].set_ylabel('Tip')
+plt.tight_layout()
+plt.show()
+```
+
+![Chart_5](docs/box_plot_total_bill_tip.png)
+
+Insights:
+- Female tend to spend lesser than Male whether on weekday and weekend shown by the median. But both of genders are likely to spend more on weekend shown by the median, 75 & 95th percentile and the spread of outliers.
+- Although Female spends lesser across the week, but they give more tips than Male on Friday and Sunday. Noted on those two days, Male spends way higher than Female.
+
+### 6. 💡 What is the average tip given by smokers vs. non-smokers across different meal times?
+
+Chart: Catplot(kind = Point)
+
+Code:
+```python
+a = sns.catplot(
+    data=tips,
+    kind='point',
+    x = 'smoker',
+    y = 'tip',
+    col = 'time',
+    estimator='mean',
+    linestyle = 'none',
+    errorbar= ('ci',95),
+    capsize = 0.2
+)
+
+a.fig.suptitle('Point Plot Tip across Smoker by Day', y = 1.03)
+a.set_xlabels('Smoker')
+a.set_ylabels('Tip')
+plt.tight_layout()
+plt.show()
+
+```
+![Chart_6](docs/point_plot_smoker_time.png)
+
+Insights:
+- Both smokers and non smokers show an increase in giving tips from lunch to dinner. But during lunch time, smokers tend to give more tips than non smokers as opposed to dinner time.
