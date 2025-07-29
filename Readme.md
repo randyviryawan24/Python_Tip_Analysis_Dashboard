@@ -28,3 +28,7 @@ pip install pandas seaborn matplotlib scipy
 
 ### 1. 💡 Q1: What's the relationship between Total Bill and Tip?
 
+
+![Chart_1](docs/relationship_total_bill_and_tip.png)
+
+
